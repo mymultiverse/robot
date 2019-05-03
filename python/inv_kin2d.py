@@ -109,7 +109,7 @@ ani = animation.FuncAnimation(fig, animate, np.arange(1, len(y)),interval=30, bl
 ax.plot(Dp[0], Dp[1], marker='o', markersize=3, color="red")
 
 plt.show()
-ani.save('animation.gif', writer='imagemagick', fps=50)
+ani.save('inv_kin2d.gif', writer='imagemagick', fps=50)
 
 
 
