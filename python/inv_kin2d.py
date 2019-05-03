@@ -2,19 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-L1 = 1.0  # length of pendulum 1 in m
-L2 = 1.0  # length of pendulum 2 in m
+L1 = 1.0  # length of arm 1 in m
+L2 = 1.0  # length of arm 2 in m
 
 l = np.array([L1,L2])
 
-# p_r = np.random.random()*l.sum()
+
+# target point
+# pr = np.random.random()*l.sum()
 # p_th = np.random.random()*2*np.pi
 
 pr = 1
 p_th = np.pi
+Dp = np.array([pr*np.cos(p_th), pr*np.sin(p_th)]) # target point x,y coordinate
 
-Dp = np.array([pr*np.cos(p_th), pr*np.sin(p_th)])
-
+# Jacobian Matrix
 def Jacob(th,l):
 
     l1 = l[0]
@@ -23,9 +25,11 @@ def Jacob(th,l):
     th2 = th[1]
 
     J = np.array([[-l1*np.sin(th1)-l2*np.sin(th1+th2), -l2*np.sin(th1+th2)],
-        [l1*np.cos(th1)+l2*np.cos(th1+th2), l2*np.cos(th1+th2)]]) 
+        [l1*np.cos(th1)+l2*np.cos(th1+th2), l2*np.cos(th1+th2)]])
+    
     return J
 
+# forward kinematics to get the position of end point of robotic arm
 
 def forw_kin(th,l):
     l1 = l[0]
@@ -34,7 +38,10 @@ def forw_kin(th,l):
     pos = np.array([l2*np.cos(th.sum())+l1*np.cos(th1),l2*np.sin(th.sum())+l1*np.sin(th1)])
     return pos
 
+
+# inverse kinematics
 def sim(th,dt):
+    
     k=0.5
     y = th
     while True:   
@@ -61,7 +68,7 @@ l_th = np.array([np.pi/4,np.pi/4])
 ini_state = l_th
 
 
-y = sim(ini_state,dt) .
+y = sim(ini_state,dt) 
 
 
 x1 = L1*np.cos(y[:, 0])
@@ -92,7 +99,7 @@ def init():
     return line, linepath, line1path, time_text
 
 def animate(i):
-    thisx = [0, x1[i], x2[i]]  # x codrin of point making pendulum  
+    thisx = [0, x1[i], x2[i]]  # x codrin of point making arm  
     thisy = [0, y1[i], y2[i]]  # y cord of point 
     line.set_data(thisx, thisy)
 
@@ -105,13 +112,7 @@ def animate(i):
 
 ani = animation.FuncAnimation(fig, animate, np.arange(1, len(y)),interval=30, blit=True, init_func=init)
 
-
 ax.plot(Dp[0], Dp[1], marker='o', markersize=3, color="red")
 
 plt.show()
 ani.save('inv_kin2d.gif', writer='imagemagick', fps=50)
-
-
-
-
-
